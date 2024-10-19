@@ -5,17 +5,20 @@ import os
 
 
 def print_usage_and_exit():
+    """Print usage message and exit."""
     print("Usage: ./markdown2html.py README.md README.html", file=sys.stderr)
     sys.exit(1)
 
 
 def check_file_exists(file_name):
+    """Check if a file exists."""
     if not os.path.isfile(file_name):
         print(f"Missing {file_name}", file=sys.stderr)
         sys.exit(1)
 
 
 def convert_markdown_to_html_line(line, in_list):
+    """Convert a single line of Markdown to HTML."""
     stripped_line = line.strip()
 
     if stripped_line.startswith('#'):
@@ -32,7 +35,8 @@ def convert_markdown_to_html_line(line, in_list):
         if not in_list:
             in_list = True
             return (
-                f"<ul>\n<li>{list_item}</li>",
+                "<ul>\n"
+                f"<li>{list_item}</li>",
                 True,
                 in_list
             )
@@ -44,7 +48,8 @@ def convert_markdown_to_html_line(line, in_list):
         if not in_list:
             in_list = True
             return (
-                f"<ol>\n<li>{list_item}</li>",
+                "<ol>\n"
+                f"<li>{list_item}</li>",
                 True,
                 in_list
             )
@@ -56,15 +61,14 @@ def convert_markdown_to_html_line(line, in_list):
 
     else:
         if in_list:
-            if line.startswith('- '):
-                return "</ul>", False, False
-            elif line.startswith('* '):
-                return "</ol>", False, False
+            closing_tag = "</ul>" if line.startswith('- ') else "</ol>"
+            return closing_tag, False, False
 
         return f"<p>{stripped_line}</p>", False, in_list
 
 
 def convert_markdown_to_html(input_file, output_file):
+    """Convert the entire Markdown file to HTML."""
     check_file_exists(input_file)
 
     with open(input_file, 'r') as md_file:
@@ -82,10 +86,8 @@ def convert_markdown_to_html(input_file, output_file):
             html_content.append(converted_line)
 
     if in_list:
-        if line.startswith('- '):
-            html_content.append("</ul>")
-        elif line.startswith('* '):
-            html_content.append("</ol>")
+        closing_tag = "</ul>" if lines[-1].startswith('- ') else "</ol>"
+        html_content.append(closing_tag)
 
     with open(output_file, 'w') as html_file:
         html_file.write('\n'.join(html_content))
