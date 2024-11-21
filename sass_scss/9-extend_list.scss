@@ -1,0 +1,16 @@
+// using extend
+
+.info {
+    font-size: 12px;
+}
+
+// copy all the properties of .info
+.success {
+    @extend .info;
+    color: #00FF00;
+}
+
+.warning {
+    @extend .info;
+    color: #FF0000;
+}

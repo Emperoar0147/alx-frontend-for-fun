@@ -1,0 +1,18 @@
+/* a sass file that assigns Margin left and right at 10px to body tags
+Margin left and right at 15px to div tags must use mixin */
+
+// Define mixin for setting margins
+@mixin set-margins($left, $right) {
+    margin-left: $left;
+    margin-right: $right;
+}
+
+// Apply mixin to body tag
+body {
+    @include set-margins(10px, 10px);
+}
+
+// Apply mixin to div tag
+div {
+    @include set-margins(15px, 15px);
+}
